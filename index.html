@@ -7,10 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .key {
-      @apply w-10 h-10 flex items-center justify-center rounded-md text-white font-bold shadow transition-all duration-200;
+      @apply w-10 h-10 flex items-center justify-center rounded text-white font-bold shadow transition-all duration-200;
     }
     .active {
-      @apply bg-yellow-300 text-black;
+      @apply bg-yellow-400 text-black;
     }
   </style>
 </head>
@@ -33,11 +33,12 @@
     <button onclick="resetGame()" class="bg-red-600 hover:bg-red-500 px-6 py-2 rounded text-white">Restart</button>
   </div>
 
-  <!-- Keyboard Heatmap -->
-  <div id="keyboard" class="grid grid-cols-14 gap-1">
-    '1234567890-=qwertyuiop[]\\asdfghjkl;\'zxcvbnm,./'.split('').forEach(char => {
-      document.write(`<div class='key bg-gray-700' id='key-${char.toUpperCase()}'>${char.toUpperCase()}</div>`);
-    });
+  <!-- Visual Keyboard Heatmap -->
+  <div class="space-y-1" id="keyboard">
+    <div class="flex justify-center gap-1" id="row1"></div>
+    <div class="flex justify-center gap-1" id="row2"></div>
+    <div class="flex justify-center gap-1" id="row3"></div>
+    <div class="flex justify-center gap-1" id="row4"></div>
   </div>
 
   <script>
@@ -47,6 +48,24 @@
       "Typing speed is measured in words per minute and depends on accuracy and consistency.",
       "JavaScript allows developers to create interactive web applications with dynamic features."
     ];
+
+    const keyboardLayout = {
+      row1: ['ESC','1','2','3','4','5','6','7','8','9','0','-','=','BACK'],
+      row2: ['TAB','Q','W','E','R','T','Y','U','I','O','P','[',']','\\'],
+      row3: ['CAPS','A','S','D','F','G','H','J','K','L',';','\'','ENTER'],
+      row4: ['SHIFT','Z','X','C','V','B','N','M',',','.','/','SHIFT']
+    };
+
+    Object.keys(keyboardLayout).forEach(row => {
+      const rowEl = document.getElementById(row);
+      keyboardLayout[row].forEach(key => {
+        const keyDiv = document.createElement('div');
+        keyDiv.className = 'key bg-gradient-to-r from-red-500 via-yellow-400 to-red-500';
+        keyDiv.id = `key-${key}`;
+        keyDiv.innerText = key;
+        rowEl.appendChild(keyDiv);
+      });
+    });
 
     let timeLeft = 60;
     let timerInterval;
