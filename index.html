@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Speed Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      color: #0077cc;
+    }
+    #paragraph {
+      max-width: 800px;
+      margin: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    textarea {
+      width: 800px;
+      height: 150px;
+      font-size: 18px;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+    #timer, #wpm {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    #buttons {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Typing Speed Game</h1>
+  <div id="paragraph"></div>
+  <textarea id="input" placeholder="Start typing here..." disabled></textarea>
+  <div id="timer">Time Left: 60s</div>
+  <div id="wpm"></div>
+  <div id="buttons">
+    <button onclick="startGame()">Start</button>
+    <button onclick="resetGame()">Restart</button>
+  </div>
+
+  <script>
+    const paragraphs = [
+      "Python is a powerful programming language used in web development, data science, and more.",
+      "The quick brown fox jumps over the lazy dog. This sentence contains all the letters.",
+      "Typing speed is measured in words per minute and depends on accuracy and consistency.",
+      "JavaScript allows developers to create interactive web applications with dynamic features."
+    ];
+
+    let timeLeft = 60;
+    let timerInterval;
+    let isRunning = false;
+    let startTime;
+
+    const paragraphEl = document.getElementById('paragraph');
+    const inputEl = document.getElementById('input');
+    const timerEl = document.getElementById('timer');
+    const wpmEl = document.getElementById('wpm');
+
+    function setRandomParagraph() {
+      const randomText = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+      paragraphEl.innerText = randomText;
+    }
+
+    function startGame() {
+      if (isRunning) return;
+      resetGame();
+      isRunning = true;
+      inputEl.disabled = false;
+      inputEl.focus();
+      startTime = new Date();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerEl.innerText = `Time Left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          inputEl.disabled = true;
+          calculateWPM();
+          isRunning = false;
+        }
+      }, 1000);
+    }
+
+    function calculateWPM() {
+      const typedText = inputEl.value.trim();
+      const wordCount = typedText.split(/\s+/).length;
+      const elapsedTime = (60 - timeLeft) / 60;
+      const wpm = Math.round(wordCount / elapsedTime);
+      wpmEl.innerText = `Your typing speed is ${wpm} WPM.`;
+    }
+
+    function resetGame() {
+      clearInterval(timerInterval);
+      timeLeft = 60;
+      timerEl.innerText = `Time Left: ${timeLeft}s`;
+      inputEl.value = '';
+      wpmEl.innerText = '';
+      setRandomParagraph();
+    }
+
+    window.onload = setRandomParagraph;
+  </script>
+</body>
+</html>
