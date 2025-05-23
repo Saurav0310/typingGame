@@ -4,62 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Typing Speed Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+    .key {
+      @apply w-10 h-10 flex items-center justify-center rounded-md text-white font-bold shadow transition-all duration-200;
     }
-    h1 {
-      color: #0077cc;
-    }
-    #paragraph {
-      max-width: 800px;
-      margin: 20px;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    textarea {
-      width: 800px;
-      height: 150px;
-      font-size: 18px;
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      resize: none;
-    }
-    #timer, #wpm {
-      margin-top: 20px;
-      font-size: 20px;
-    }
-    #buttons {
-      margin-top: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 0 10px;
-      cursor: pointer;
+    .active {
+      @apply bg-yellow-300 text-black;
     }
   </style>
 </head>
-<body>
-  <h1>Typing Speed Game</h1>
-  <div id="paragraph"></div>
-  <textarea id="input" placeholder="Start typing here..." disabled></textarea>
-  <div id="timer">Time Left: 60s</div>
-  <div id="wpm"></div>
-  <div id="buttons">
-    <button onclick="startGame()">Start</button>
-    <button onclick="resetGame()">Restart</button>
+<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen p-4">
+  <h1 class="text-4xl font-bold mb-6">Typing Speed Game</h1>
+
+  <div class="max-w-4xl w-full bg-gray-900 text-lg p-6 rounded-lg shadow mb-4 text-center">
+    <p id="paragraph" class="text-white"></p>
+  </div>
+
+  <textarea id="input" class="w-full max-w-4xl p-4 rounded-lg text-black text-lg resize-none h-32 mb-4" placeholder="Start typing here..." disabled></textarea>
+
+  <div class="flex justify-between w-full max-w-4xl mb-4">
+    <span id="timer" class="text-lg">Time Left: 60s</span>
+    <span id="wpm" class="text-lg"></span>
+  </div>
+
+  <div class="flex gap-4 mb-8">
+    <button onclick="startGame()" class="bg-green-600 hover:bg-green-500 px-6 py-2 rounded text-white">Start</button>
+    <button onclick="resetGame()" class="bg-red-600 hover:bg-red-500 px-6 py-2 rounded text-white">Restart</button>
+  </div>
+
+  <!-- Keyboard Heatmap -->
+  <div id="keyboard" class="grid grid-cols-14 gap-1">
+    '1234567890-=qwertyuiop[]\\asdfghjkl;\'zxcvbnm,./'.split('').forEach(char => {
+      document.write(`<div class='key bg-gray-700' id='key-${char.toUpperCase()}'>${char.toUpperCase()}</div>`);
+    });
   </div>
 
   <script>
@@ -123,6 +101,16 @@
     }
 
     window.onload = setRandomParagraph;
+
+    document.addEventListener('keydown', e => {
+      const key = document.getElementById(`key-${e.key.toUpperCase()}`);
+      if (key) key.classList.add('active');
+    });
+
+    document.addEventListener('keyup', e => {
+      const key = document.getElementById(`key-${e.key.toUpperCase()}`);
+      if (key) key.classList.remove('active');
+    });
   </script>
 </body>
 </html>
